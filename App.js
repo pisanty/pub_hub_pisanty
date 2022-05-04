@@ -14,7 +14,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Header
+        {/* <Header
           leftComponent={{ text: "PubHub", style: { color: "#fff" } }}
           rightComponent={{
             icon: "logout",
@@ -40,13 +40,13 @@ export default function App() {
               <Icon type="material" name={iconName} size={size} color={color} />
             ); //it returns an icon component
           },
-        })}
+        })} */}
         <Tab.Screen
           options={{ headerShown: false }}
           name="Login"
           component={LoginScreen}
         />
-        <Tab.Screen name="Contacts" component={ContactsScreen} />
+        <Tab.Screen name="Contacts"  component={ContactsScreen} />
         <Tab.Screen name="Favorites" component={FavoritesScreen} />
         <Tab.Screen name="Map" component={MapScreen} />
       </Tab.Navigator>

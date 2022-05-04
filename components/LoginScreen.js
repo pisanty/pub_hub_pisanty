@@ -7,49 +7,37 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-} from "react-native";
-import { initializeApp } from "firebase/app";
+} from 'react-native';
+import { auth } from '../firebase';
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
-} from "firebase/auth";
-const firebaseConfig = {
-  apiKey: "AIzaSyAGKtrsU6gelADNlJQHrofZgsjktDaSAkw",
-  authDomain: "pubhubpisanty.firebaseapp.com",
-  databaseURL:
-    "https://pubhubpisanty-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "pubhubpisanty",
-  storageBucket: "pubhubpisanty.appspot.com",
-  messagingSenderId: "430922283877",
-  appId: "1:430922283877:web:dac6584838cc4b655c7f8c",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+} from 'firebase/auth';
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const auth = getAuth();
+  const [signedIn, setSignedIn] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigation = useNavigation();
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        const uid = user.uid;
-        //navigation.navigate("Map");
+        
+        navigation.navigate("Map")
       }
     });
-    return unsubscribe;
-  }, []);
+    return unsubscribe
+  }, [])
 
-  const handleSignUp = () => {
-    //auth;
+  const Register = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        setSignedIn(true);
+        navigation.navigate("Map");
         // ...
       })
       .catch((error) => {
@@ -59,12 +47,12 @@ const LoginScreen = () => {
       });
   };
 
-  const handleLogin = () => {
-    //auth;
+  const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        navigation.navigate("Map");
         // ...
       })
       .catch((error) => {
@@ -93,17 +81,13 @@ const LoginScreen = () => {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={() => {
-            handleLogin;
-          }}
+          onPress={Login}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => {
-            handleSignUp;
-          }}
+          onPress={Register}
           style={[styles.button, styles.buttonOutline]}
         >
           <Text style={styles.buttonOutlineText}>Register</Text>
