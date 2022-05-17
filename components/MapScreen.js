@@ -29,6 +29,14 @@ const MapScreen = () => {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+      let lat = location.coords.latitude;
+      let lon = location.coords.longitude;
+      setRegion({
+        ...region,
+        latitude: lat,
+        longitude: lon,
+      });
+      showPubs(lat, lon);
     })();
   }, []);
 
@@ -40,6 +48,9 @@ const MapScreen = () => {
   }
 
   const showAddress = () => {
+    let lat = "";
+    let lon = "";
+
     if (address) {
       const url =
         "https://maps.googleapis.com/maps/api/geocode/json?address=" +
@@ -48,36 +59,35 @@ const MapScreen = () => {
       fetch(url)
         .then((response) => response.json())
         .then((responseData) => {
-          const lat = responseData.results[0].geometry.location.lat;
-          const lon = responseData.results[0].geometry.location.lng;
+          lat = responseData.results[0].geometry.location.lat;
+          lon = responseData.results[0].geometry.location.lng;
           setRegion({
             ...region,
             latitude: lat,
             longitude: lon,
-            latitudeDelta: 0.0312,
-            longitudeDelta: 0.0211,
           });
+          showPubs(lat, lon);
         })
         .then(() => showPubs())
         .catch((error) =>
           Alert.alert("Error", "Something is wrong with the fetch")
         );
     }
+  };
 
-    const showPubs = () => {
-      const url =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" +
-        region.latitude +
-        "," +
-        region.longitude +
-        "&radius=500&type=bar&key=AIzaSyAGKtrsU6gelADNlJQHrofZgsjktDaSAkw";
-      fetch(url)
-        .then((response) => response.json())
-        .then((responseData) => setPubs(responseData.results))
-        .catch((error) =>
-          Alert.alert("Error", "Something is wrong with the fetch")
-        );
-    };
+  const showPubs = (lat, lon) => {
+    const url =
+      "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" +
+      lat +
+      "," +
+      lon +
+      "&radius=500&type=bar&key=AIzaSyAGKtrsU6gelADNlJQHrofZgsjktDaSAkw";
+    fetch(url)
+      .then((response) => response.json())
+      .then((responseData) => setPubs(responseData.results))
+      .catch((error) =>
+        Alert.alert("Error", "Something is wrong with the fetch")
+      );
   };
 
   const SignOut = () => {
@@ -86,25 +96,26 @@ const MapScreen = () => {
       .then(() => {
         navigation.navigate("LoginStack");
       })
-      .catch((error) => alert(error.message));
+      .catch((error) => Alert.alert("Error", error));
   };
 
   return (
     <View style={styles.container}>
-      <Text style={{ marginTop: 40 }}>Hello, {auth.currentUser?.email}</Text>
-      <MapView style={styles.map} region={region}>
+      <Text style={styles.text}>Hello, {auth.currentUser?.email}</Text>
+      <MapView style={styles.map} region={region} showsUserLocation={true}>
         {pubs.map((marker, index) => (
           <MapView.Marker
             key={index}
             coordinate={{
-              latitude: region.latitude,
-              longitude: region.longitude,
+              latitude: marker.geometry.location.lat,
+              longitude: marker.geometry.location.lng,
             }}
             title={marker.name}
             description={marker.vicinity}
           />
         ))}
       </MapView>
+
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Enter address"
@@ -112,9 +123,10 @@ const MapScreen = () => {
           onChangeText={(address) => setAddress(address)}
         />
       </View>
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={showAddress}>
-          <Text style={styles.buttonText}>Show</Text>
+          <Text style={styles.buttonText}>Show bars in the area</Text>
         </TouchableOpacity>
 
         <TouchableOpacity

@@ -1,8 +1,7 @@
 // Import the functions you need from the SDKs you need
 
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
-import { getDatabase, push, ref, onValue } from "firebase/database";
+import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -13,7 +12,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyAGKtrsU6gelADNlJQHrofZgsjktDaSAkw",
   authDomain: "pubhubpisanty.firebaseapp.com",
   databaseURL:
-    "https://pubhubpisanty-default-rtdb.europe-west1.firebasedatabase.app",
+    "https://pubhubpisanty-default-rtdb.europe-west1.firebasedatabase.app/",
   projectId: "pubhubpisanty",
   storageBucket: "pubhubpisanty.appspot.com",
   messagingSenderId: "430922283877",
@@ -23,8 +22,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
 const database = getDatabase(app);
 const auth = getAuth(app);
 
-export { auth };
+export { auth, database };

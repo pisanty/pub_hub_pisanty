@@ -37,9 +37,10 @@ const ContactsScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.text}>Your Phone Book</Text>
       <Text>{contacts.name}</Text>
       <FlatList
-        style={{ marginTop: 40 }}
+        style={styles.list}
         data={contacts}
         renderItem={({ item }) => (
           <View style={{ flexDirection: "row" }}>

@@ -1,6 +1,4 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import styles from "./components/Styles";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -9,6 +7,10 @@ import ContactsScreen from "./components/ContactsScreen";
 import FavoritesScreen from "./components/FavoritesScreen";
 import MapScreen from "./components/MapScreen";
 import { Icon } from "react-native-elements";
+import { LogBox } from "react-native";
+
+console.ignoredYellowBox = true;
+LogBox.ignoreAllLogs();
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

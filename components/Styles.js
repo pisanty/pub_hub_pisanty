@@ -14,6 +14,12 @@ export default StyleSheet.create({
     width: 360,
     height: 203,
   },
+  text: {
+    marginTop: 50,
+    fontStyle: "italic",
+    fontWeight: "bold",
+    fontSize: 22,
+  },
   input: {
     backgroundColor: "white",
     paddingHorizontal: 15,
@@ -25,7 +31,8 @@ export default StyleSheet.create({
     width: "60%",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 20,
+    marginBottom: 10,
   },
   button: {
     backgroundColor: "black",
@@ -52,11 +59,14 @@ export default StyleSheet.create({
   },
   map: {
     flex: 5,
-    ...StyleSheet.absoluteFillObject,
+    alignSelf: "stretch",
     alignItems: "flex-end",
-    marginTop: 150,
-    height: 500,
+    marginTop: 20,
+    marginBottom: 20,
     marginLeft: 10,
     marginRight: 10,
+  },
+  list: {
+    marginLeft: 20,
   },
 });

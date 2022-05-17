@@ -4,62 +4,64 @@ import {
   KeyboardAvoidingView,
   View,
   Image,
+  Alert,
   Text,
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { auth } from "../firebase";
+import { auth, database } from "../firebase";
 import styles from "./Styles";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
+import { ref, set } from "firebase/database";
 
 const LoginScreen = () => {
   const [signedIn, setSignedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [favorites, setFavorites] = useState([]);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigation.navigate("MapStack");
-      }
-    });
-    return unsubscribe;
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       navigation.navigate("MapStack");
+  //     }
+  //   });
+  //   return unsubscribe;
+  // }, []);
 
   const Register = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
         const user = userCredential.user;
+        const uid = userCredential.user.uid;
+        const data = {
+          email,
+          favorites,
+        };
+        set(ref(database, "users/" + uid), data);
         setSignedIn(true);
         navigation.navigate("MapStack");
-        // ...
       })
       .catch((error) => {
         const errorCode = error.code;
-        //const errorMessage = error.message;
-        alert(errorCode);
-        // ..
+        Alert.alert("Error", errorCode);
       });
   };
 
   const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
         const user = userCredential.user;
         navigation.navigate("MapStack");
-        // ...
       })
       .catch((error) => {
         const errorCode = error.code;
-        //const errorMessage = error.message;
-        alert(errorCode);
+        Alert.alert("Error", errorCode);
       });
   };
 
