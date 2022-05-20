@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  SafeAreaView,
   FlatList,
   Alert,
 } from "react-native";
@@ -19,18 +20,18 @@ const FavoriteScreen = () => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [rating, setRating] = useState("");
-  const [favorites, setFavorites] = useState([]);
+  const [items, setItems] = useState([]);
 
-  // useEffect(() => {
-  //   const uid = auth.currentUser.uid;
-  //   const favRef = ref(database, "users/" + uid + "/favorites/");
-  //   onValuechange(favRef, (snapshot) => {
-  //     const data = snapshot.val();
-  //     setFavorites(Object.values(data));
-  //   });
-  // }, []);
+  useEffect(() => {
+    //const uid = auth.currentUser.uid;
+    const favRef = ref(database, "users/" + uid + "/favorites/");
+    onValue(favRef, (snapshot) => {
+      const data = snapshot.val();
+      setItems(Object.values(data));
+    });
+  }, []);
 
-  const saveFav = (favorite) => {
+  const saveFav = () => {
     if (name && address && rating) {
       push(ref(database, "users/" + uid + "/favorites/"), {
         name: name,
@@ -71,19 +72,19 @@ const FavoriteScreen = () => {
         <TouchableOpacity onPress={saveFav} style={styles.button}>
           <Text style={styles.buttonText}>Add to Favorites</Text>
         </TouchableOpacity>
-
-        <View style={styles.container}>
-          <FlatList
-            style={styles.list}
-            data={favorites}
-            renderItem={({ data }) => (
+      </View>
+      <View style={styles.container}>
+        <FlatList
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.list}>
               <Text style={{ fontSize: 18 }}>
-                {data.name}, {data.address}, {data.rating}
+                {item.name}, {item.address}, {item.rating}
               </Text>
-            )}
-            keyExtractor={(favorite, index) => index.toString()}
-          />
-        </View>
+            </View>
+          )}
+          data={items}
+        />
       </View>
     </View>
   );
